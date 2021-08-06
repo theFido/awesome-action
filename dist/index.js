@@ -6299,10 +6299,11 @@ try {
 	console.log(`Hello ${name}`);
 	const time = (new Date()).toLocaleTimeString();
 	core.setOutput('time', time);
-	const payload = JSON.stringify(github.context.payload, null, 2);
-	console.log(`Payload: ${payload}`);
+	// const payload = JSON.stringify(github.context.payload, null, 2);
+	// console.log(`Payload: ${payload}`);
 	const commits = Array.isArray(github.context.payload.commits) ? github.context.payload.commits : [];
 	let lastDate = null;
+	let firstCommit = null;
 	if (commits.length > 0) {
 		console.log(`ℹ️  Commits: ${commits.length}`);
 		commits.forEach(c => {
@@ -6311,10 +6312,16 @@ try {
 			if (lastDate !== null) {
 				const diff = to(commitTS.getTime() - lastDate.getTime(), MINUTE);
 				sinceMsg = `${diff.toLocaleString()} minutes after the prev commit`;
+			} else {
+				firstCommit = commitTS;
 			}
 			console.log(`- ${c.author.email} ${c.author.name} - ${c.message}. ${sinceMsg}`);
 			lastDate = commitTS;
 		});
+		if (commits.length > 2) {
+			const diff = to(lastDate.getTime() - firstCommit.getTime(), MINUTE);
+			console.log(`\n⏰ Buidling this feature took about: ${diff.toLocaleString()} minutes`);
+		}
 	}
 } catch(err) {
 	core.setFailed(err.message);
