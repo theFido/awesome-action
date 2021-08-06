@@ -6,7 +6,7 @@ try {
 	console.log(`Hello ${name}`);
 	const time = (new Date()).toLocaleTimeString();
 	core.setOutput('time', time);
-	const payload = jSON.stringify(github.context.payload, null, 2);
+	const payload = JSON.stringify(github.context.payload, null, 2);
 	console.log(`Payload: ${payload}`);
 } catch(err) {
 	core.setFailed(err.message);
