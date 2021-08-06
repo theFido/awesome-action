@@ -9,5 +9,5 @@ try {
 	const payload = jSON.stringify(github.context.payload, null, 2);
 	console.log(`Payload: ${payload}`);
 } catch(err) {
-	core.setFailed(error.message);
+	core.setFailed(err.message);
 }
