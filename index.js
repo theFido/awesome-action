@@ -12,10 +12,6 @@ function to(from, factor) {
 try {
 	const name = core.getInput('your-name');
 	console.log(`Hello ${name}`);
-	const time = (new Date()).toLocaleTimeString();
-	core.setOutput('time', time);
-	// const payload = JSON.stringify(github.context.payload, null, 2);
-	// console.log(`Payload: ${payload}`);
 	const commits = Array.isArray(github.context.payload.commits) ? github.context.payload.commits : [];
 	let lastDate = null;
 	let firstCommit = null;
@@ -26,16 +22,20 @@ try {
 			const commitTS = new Date(c.timestamp);
 			if (lastDate !== null) {
 				const diff = to(commitTS.getTime() - lastDate.getTime(), MINUTE);
-				sinceMsg = `${diff.toLocaleString()} minutes after the prev commit`;
+				sinceMsg = `\u001b[33m${diff.toLocaleString()} minutes after the prev commit\u001b[0m`;
 			} else {
 				firstCommit = commitTS;
 			}
-			console.log(`- ${c.author.email} ${c.author.name} - ${c.message}. ${sinceMsg}`);
+			console.log(`- [${c.author.email} ${c.author.name}] - "${c.message}". ${sinceMsg}`);
 			lastDate = commitTS;
 		});
 		if (commits.length > 2) {
 			const diff = to(lastDate.getTime() - firstCommit.getTime(), MINUTE);
-			console.log(`\n⏰ Buidling this feature took about: ${diff.toLocaleString()} minutes`);
+			const msg = `${diff.toLocaleString()} minutes`;
+			console.log(`\n⏰ Buidling this feature took about: ${msg}`);
+			core.setOutput('time', msg);
+		} else {
+			core.setOutput('time', 'unknown');
 		}
 	}
 } catch(err) {
