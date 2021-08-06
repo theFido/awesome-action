@@ -1,14 +1,14 @@
 name: 'DemoJSAction'
 description: 'Display message'
 inputs:
-	your-name:
-		description: 'Your name'
-		required: true
-		default: 'Soldier 76'
-	
+  your-name:
+    description: 'Your name'
+    required: true
+    default: 'Soldier 76'
+
 outputs:
-	time:
-		description: 'Time of execution'
+  time:
+    description: 'Time of execution'
 runs:
-	using: 'node12'
-	main: 'dist/index.js'
+  using: 'node12'
+  main: 'dist/index.js'
